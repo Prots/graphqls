@@ -80,6 +80,7 @@ var schema, _ = graphql.NewSchema(
 
 func main() {
 	http.HandleFunc("/graphql", graphqlHandler)
+	http.HandleFunc("/*", notFoundHandler)
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -94,7 +95,13 @@ func graphqlHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusBadRequest)
-	json.NewEncoder(w).Encode("{\"error\":\"enter valid query string\"}")
+	w.Write([]byte("{\"error\":\"enter valid query string\"}"))
+}
+
+func notFoundHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusNotFound)
+	w.Write([]byte("{\"error\":\"resource not found\"}"))
 }
 
 func executeQuery(query string, schema graphql.Schema) *graphql.Result {

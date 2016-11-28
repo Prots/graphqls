@@ -15,16 +15,6 @@ const (
 	secondsPerHour   = 3600
 )
 
-type tm struct {
-	timeStr   string `json:"timeStr"`
-	timestamp int64  `json:"timestamp"`
-}
-
-type dt struct {
-	dateStr   string `json:"dateStr"`
-	timestamp int64  `json:"timestamp"`
-}
-
 var timeType = graphql.NewObject(
 	graphql.ObjectConfig{
 		Name: "time",
@@ -34,7 +24,7 @@ var timeType = graphql.NewObject(
 				Resolve: timeStrResolver,
 			},
 			"timestamp": &graphql.Field{
-				Type:    graphql.String,
+				Type:    graphql.Int,
 				Resolve: timestampResolver,
 			},
 		},
@@ -50,7 +40,7 @@ var dateType = graphql.NewObject(
 				Resolve: dateStrResolver,
 			},
 			"timestamp": &graphql.Field{
-				Type:    graphql.String,
+				Type:    graphql.Int,
 				Resolve: timestampOfDateResolver,
 			},
 		},
@@ -87,7 +77,7 @@ func main() {
 func graphqlHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	queryString := r.URL.Query()
-	log.Printf("query values: %v", queryString)
+	//log.Printf("query values: %v", queryString)
 	if queryString != nil && queryString["query"] != nil {
 		result := executeQuery(queryString["query"][0], schema)
 		w.WriteHeader(http.StatusOK)

@@ -1,24 +1,24 @@
 package main
 
 import (
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
-	"encoding/json"
 )
 
 type dataObj struct {
 	Data struct {
-		     Date struct {
-				  DateStr   	string `json:"dateStr"`
-				  DateTimestamp 	int64  `json:"timestamp"`
-			  } `json:"date"`
-		     Time struct {
-				  TimeStr   string `json:"timeStr"`
-				  Timestamp int64  `json:"timestamp"`
-			  } `json:"time"`
-	     } `json:"data"`
+		Date struct {
+			DateStr       string `json:"dateStr"`
+			DateTimestamp int64  `json:"timestamp"`
+		} `json:"date"`
+		Time struct {
+			TimeStr   string `json:"timeStr"`
+			Timestamp int64  `json:"timestamp"`
+		} `json:"time"`
+	} `json:"data"`
 }
 
 type handlerFun func(w http.ResponseWriter, r *http.Request)
@@ -174,7 +174,7 @@ func BenchmarkGraphqlService(b *testing.B) {
 	})
 }
 
-func requestUrl(query string, b *testing.B){
+func requestUrl(query string, b *testing.B) {
 	req, err := http.NewRequest("GET", "http://localhost:8080/"+query, nil)
 	if err != nil {
 		b.Fatal(err)
